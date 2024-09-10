@@ -3,7 +3,7 @@ import type { HeadFC, PageProps } from "gatsby"
 import { graphql, useStaticQuery } from 'gatsby'
 import { text } from "stream/consumers";
 import { OutboundLink } from "gatsby-plugin-google-gtag"
-
+import logo from '../images/GME-white.png'; // Adjust the path if necessary
 
 const query = graphql`
   {
@@ -149,6 +149,7 @@ const IndexPage: React.FC<PageProps> = () => {
   return (
     <main style={pageStyles}>
       <h1 style={headingStyles}>
+      <img src={logo} alt="Site Logo" style={{ display: 'inline', maxHeight: '1em', paddingRight: '6px' }} />
         GME Games
       </h1>
       <p style={tagLineStyle}>Brought to you by <OutboundLink href="https://gmeonbase.xyz/" style={tagLineLinkStyle} target="_blank">GME on Base</OutboundLink></p>
