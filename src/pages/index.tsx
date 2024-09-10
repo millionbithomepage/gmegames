@@ -7,11 +7,14 @@ import logo from '../images/GME-white.png'; // Adjust the path if necessary
 
 const query = graphql`
   {
-    allContentfulGame {
+    allContentfulGame(
+      sort: {order: ASC}
+    ) {
       edges {
         node {
           name
           link
+          order
           cover {
             file {
               url
@@ -22,7 +25,6 @@ const query = graphql`
     }
   }
 `;
-
 
 const pageStyles = {
   color: "#232129",
@@ -135,15 +137,17 @@ const IndexPage: React.FC<PageProps> = () => {
   const data = useStaticQuery(query);
 
   // Track clicks on links to external websites
-  // function trackOutboundLink(url: string) {
-  //   window.gtag('event', 'click', {
-  //     'event_category': 'outbound',
-  //     'event_label': url,
-  //     'transport_type': 'beacon',
-  //     'event_callback': function () { document.location
-  //     }
-  //   });
-  // }
+  function trackOutboundLink(url: string) {
+    if (typeof window.gtag !== 'undefined') {
+      window.gtag('event', `clickGame:${url}`, {
+        'event_category': 'outbound',
+        'event_label': url,
+        'transport_type': 'beacon',
+        'event_callback': function () { document.location
+        }
+      });
+    }
+  }
 
 
   return (
@@ -158,7 +162,10 @@ const IndexPage: React.FC<PageProps> = () => {
       <div className="shelves-container">
         {data.allContentfulGame.edges.map(({ node }: any) => (
           <div className="game-card" key={node.name}>
-            <OutboundLink href={node.link} target="_blank" rel="noopener noreferrer">
+            <OutboundLink href={node.link} target="_blank" onClick={() => {
+                trackOutboundLink(node.link)
+              }
+            }>
               <article className="bluray case" key={node.name}>
                 <div>
                   <div className="logo"><img src="https://raw.githubusercontent.com/base-org/brand-kit/main/logo/symbol/Base_Symbol_Blue.svg" /></div>
